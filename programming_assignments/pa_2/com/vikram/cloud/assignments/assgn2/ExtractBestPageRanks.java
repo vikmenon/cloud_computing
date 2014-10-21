@@ -59,20 +59,20 @@ class ExtractBestPageRanks {
 			// Emit the computed pageranks in decreasing order
 			System.out.println("Number of page ranks to be "
 					+ "emitted is now :: " + bestNodesAndRanks.size());
-			Float highestRemainingValue = Float.MAX_VALUE;
+			Float highestRemainingValue = 0f;
 			for (int i = 0; i < NUM_TOP_PAGERANKS; i++) {
 				highestRemainingValue = Float.MIN_VALUE;
-				
+
+				int index = -1;
 				// Find the highest pagerank in the remaining list
 				for (NodeRankStruct nodeRankPair : bestNodesAndRanks)
-					if (nodeRankPair.pagerank > highestRemainingValue)
+					if (nodeRankPair.pagerank > highestRemainingValue) {
 						highestRemainingValue = nodeRankPair.pagerank;
+						index = bestNodesAndRanks.indexOf(nodeRankPair);
+					}
 				
 				// Extract that pair
-				NodeRankStruct currentPair = bestNodesAndRanks
-												.remove(
-														bestNodesAndRanks.indexOf(highestRemainingValue)
-													);
+				NodeRankStruct currentPair = bestNodesAndRanks.remove(index);
 				
 				// Emit that pair
 				context.write(new Text(currentPair.nodeID), new FloatWritable(currentPair.pagerank));
